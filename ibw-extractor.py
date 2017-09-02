@@ -64,6 +64,7 @@ def recurse_subdirs(inpaths):
     return util.flatten(list(filter(is_ibw, files)))
 
 def list_ibw(inpath):
+    """List all of the *.ibw files in a given folder"""
     if is_ibw(inpath):
         files = [inpath]
     else:
@@ -75,6 +76,7 @@ def list_ibw(inpath):
     return files
 
 def is_ibw(path):
+    """Tests whether a file path has an '.ibw' extension"""
     return os.path.splitext(path)[1] == ".ibw"
 
 

@@ -7,7 +7,7 @@ from pprint import pformat
 
 
 def save_to_file(content, filepath, mode="x", headers=False):
-    """'Safe' interactive file saver - content should be a dict"""
+    """'Safe' interactive file saver - content should be a dict or string"""
     # Get the extension
     #filename = os.path.basename(filepath)
     ext = os.path.splitext(filepath)[1]

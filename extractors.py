@@ -6,6 +6,7 @@ import util
 
 
 def ibw2dict(filename):
+    """Extract the contents of an *ibw to a dict"""
     data = loadibw(filename)
     wave = data['wave']
 
