@@ -1,0 +1,6 @@
+__pycache__
+*.pyc
+*.*~
+test
+deprecated
+tests_to_run.txt
