@@ -1,6 +1,6 @@
 # ibw-extractor
 
-Simple Python commandline tool for converting \*.ibw (Igor BinaryWave) files to CSV, TSV, or JSON, or dumping the contents to the terminal (stdout).
+A Python-based commandline tool for converting \*.ibw (Igor BinaryWave) files to CSV, TSV, or JSON, or dumping the contents to the terminal.
 
 ## Dependencies:
 This package depends on `igor` and `click`. In turn, `igor` depends on `numpy`, as well as having optional dependencies on `matplotlib` and `nose`, although these optional dependencies are not required or utilised by this package.
