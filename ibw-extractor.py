@@ -11,7 +11,6 @@ class ArgumentError(Exception):
     pass
 
 
-click.Path(exists=False, file_okay=True, dir_okay=True, writable=False, readable=True, resolve_path=False, allow_dash=False, path_type=None)
 @click.command()
 @click.argument('infiles', nargs=-1,
                 type=click.Path(exists=True, resolve_path=True))
@@ -48,7 +47,7 @@ def main(infiles, outfile, outformat, outdir, clobber, headers, recursive):
     # Iterate through input files and do action
     for infile in infiles:
         if outformat == "dump":
-            extractors.ibw2stdout(infile) # prints to stdout
+            extractors.ibw2stdout(infile)  # prints to stdout
         else:
             outpath = get_outpath(infile, outfile, outformat, outdir)
             data = extractors.ibw2dict(infile)
@@ -59,9 +58,10 @@ def recurse_subdirs(inpaths):
     """Recurse subdirectories and list return a list of ibw files"""
     # inpaths may just be one element, so it needs to be forced into a list
     files = [os.path.join(d, f) for inpath in list(inpaths)
-                                for (d, _, fs) in os.walk(inpath)
-                                for f in fs]
+             for (d, _, fs) in os.walk(inpath)
+             for f in fs]
     return util.flatten(list(filter(is_ibw, files)))
+
 
 def list_ibw(inpath):
     """List all of the *.ibw files in a given folder"""
@@ -74,6 +74,7 @@ def list_ibw(inpath):
         except NotADirectoryError:
             files = []
     return files
+
 
 def is_ibw(path):
     """Tests whether a file path has an '.ibw' extension"""
@@ -93,7 +94,7 @@ def get_outpath(infile, outfile, outformat, outdir):
     # Get the output directory
     if outdir:
         file_dir = os.path.join(_dirname, outdir)
-        os.mkdirs(file_dir, exist_ok=True) # make dirs and subdirs (if needed)
+        os.mkdirs(file_dir, exist_ok=True)  # make dirs and subdirs (if needed)
     else:
         file_dir = _dirname
 
@@ -105,7 +106,7 @@ def get_outpath(infile, outfile, outformat, outdir):
                 raise ArgumentError("Inconsistent formats in arguments")
             else:
                 file_name = outfile
-        except AttributeError: # No match found - no implied extension
+        except AttributeError:  # No match found - no implied extension
             if outformat:
                 file_name = outfile + "." + outformat
             else:

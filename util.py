@@ -73,7 +73,7 @@ def from_repr(s):
     s = s.strip()
     # "NaN" and "inf" can be converted to floats, but we don't want this
     # because it breaks in Mathematica!
-    if s[1:].isalpha(): # [1:] removes any sign
+    if s[1:].isalpha():  # [1:] removes any sign
         rep = s
     else:
         try:
@@ -116,6 +116,7 @@ def flatten_completely(lists):
     while any(map(is_list, lists)):
         lists = [item for sublist in list(lists) for item in list(sublist)]
     return lists
+
 
 def is_list(item):
     """Tests whether an item is a list (or tuple)"""
