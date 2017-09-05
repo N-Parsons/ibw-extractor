@@ -11,7 +11,8 @@ def ibw2dict(filename):
     wave = data['wave']
 
     # Get the labels and tidy them up into a list
-    labels = list(map(bytes.decode, wave['labels'][1][1:]))
+    labels = list(map(bytes.decode,
+                      util.flatten(wave['labels'])))
 
     # Get the notes and process them into a dict
     notes = util.process_notes(wave['note'])
@@ -32,7 +33,5 @@ def ibw2dict(filename):
 
 def ibw2stdout(filename):
     '''Dump the contents of an *.ibw to stdout'''
-    LOG.info('Testing {}\n'.format(filename))
-    path = os.path.join(_data_dir, filename)
-    data = loadibw(path)
+    data = loadibw(filename)
     util.pprint(data)
