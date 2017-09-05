@@ -1,5 +1,6 @@
 import os.path
 
+import numpy as np
 from igor.binarywave import load as loadibw
 
 import util
@@ -18,7 +19,7 @@ def ibw2dict(filename):
     notes = util.process_notes(wave['note'])
 
     # Get the data numpy array and convert to a simple list
-    wData = wave['wData'].tolist()
+    wData = np.nan_to_num(wave['wData']).tolist()
 
     # Get the filename from the file - warn if it differs
     fname = wave['wave_header']['bname'].decode()
