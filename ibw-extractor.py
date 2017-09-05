@@ -35,7 +35,7 @@ def main(infiles, outfile, outformat, outdir, clobber, headers, recursive):
         inpaths = filter(os.path.isdir, infiles)
         infiles = _infiles + recurse_subdirs(inpaths)
     else:
-        infiles = util.flatten(list(map(list_ibw, infiles)))
+        infiles = util.flatten(map(list_ibw, infiles))
 
     # Check for errors
     if len(infiles) is 0:
@@ -60,7 +60,7 @@ def recurse_subdirs(inpaths):
     files = [os.path.join(d, f) for inpath in list(inpaths)
              for (d, _, fs) in os.walk(inpath)
              for f in fs]
-    return util.flatten(list(filter(is_ibw, files)))
+    return util.flatten(filter(is_ibw, files))
 
 
 def list_ibw(inpath):
