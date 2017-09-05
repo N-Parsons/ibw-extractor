@@ -92,32 +92,15 @@ def pprint(data):
     print('\n'.join([line.rstrip() for line in lines]))
 
 
-def flatten(lists):
-    """Flatten a list of lists"""
-    try:
-        # Make a list of lists
-        lists = [list(from_sublist(sublist)) for sublist in lists]
-        return [item for sublist in lists for item in sublist]
-    except TypeError:
-        return lists
+def flatten(lst):
+    """Completely flatten an arbitrarily-deep list"""
+    return list(_flatten(lst))
 
 
-def from_sublist(lst):
-    """Generator that returns items of a list, or just an item"""
-    if is_list(lst):
-        for item in lst:
+def _flatten(lst):
+    """Generator for flattening arbitrarily-deep lists"""
+    for item in lst:
+        if isinstance(item, (list, tuple)):
+            yield from _flatten(item)
+        elif item not in (None, "", b''):
             yield item
-    else:
-        yield lst
-
-
-def flatten_completely(lists):
-    """Completely flatten a list of lists"""
-    while any(map(is_list, lists)):
-        lists = [item for sublist in list(lists) for item in list(sublist)]
-    return lists
-
-
-def is_list(item):
-    """Tests whether an item is a list (or tuple)"""
-    return type(item) in {list, tuple}
