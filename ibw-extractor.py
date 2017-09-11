@@ -7,6 +7,9 @@ import extractors
 import util
 
 
+VERSION = "0.1.2-dev"
+
+
 class ArgumentError(Exception):
     pass
 
@@ -25,6 +28,7 @@ class ArgumentError(Exception):
               help="Include column headers in csv/tsv output")
 @click.option('--recursive', is_flag=True,
               help="Recurse into sub-folders")
+@click.version_option(version=VERSION)
 def main(infiles, outfile, outformat, outdir, clobber, headers, recursive):
     # Get/set writemode (x => create or ask, w => overwrite)
     writemode = "w" if clobber else "x"
