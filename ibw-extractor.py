@@ -53,7 +53,7 @@ def main(infiles, outfile, outformat, outdir, clobber, headers, recursive):
         for infile in infiles:
             extractors.ibw2stdout(infile)  # prints to stdout
     else:
-        with click.progressbar(infiles) as bar:
+        with click.progressbar(infiles, width=0) as bar:
             for infile in bar:
                 outpath = get_outpath(infile, outfile, outformat, outdir)
                 data = extractors.ibw2dict(infile)
