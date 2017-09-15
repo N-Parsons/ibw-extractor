@@ -7,7 +7,7 @@ import extractors
 import util
 
 
-VERSION = "0.1.2-dev"
+VERSION = "0.1.2"
 
 
 class ArgumentError(Exception):
