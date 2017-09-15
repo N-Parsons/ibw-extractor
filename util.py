@@ -32,7 +32,7 @@ def save_to_file(content, filepath, mode="x", headers=False):
             else:
                 outfile.write(content)
     except FileExistsError:
-        click.secho("{} already exists!".format(filepath), fg="orange")
+        click.secho("\n{} already exists!".format(filepath), fg="yellow")
         if input("Do you want to overwrite it? (y/N): ").lower() == "y":
             save_to_file(content, filepath, mode="w", headers=headers)
         else:
