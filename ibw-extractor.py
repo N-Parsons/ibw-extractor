@@ -49,13 +49,15 @@ def main(infiles, outfile, outformat, outdir, clobber, headers, recursive):
                             specified for multiple input files")
 
     # Iterate through input files and do action
-    for infile in infiles:
-        if outformat == "dump":
+    if outformat == "dump":
+        for infile in infiles:
             extractors.ibw2stdout(infile)  # prints to stdout
-        else:
-            outpath = get_outpath(infile, outfile, outformat, outdir)
-            data = extractors.ibw2dict(infile)
-            util.save_to_file(data, outpath, mode=writemode)
+    else:
+        with click.progressbar(infiles) as bar:
+            for infile in bar:
+                outpath = get_outpath(infile, outfile, outformat, outdir)
+                data = extractors.ibw2dict(infile)
+                util.save_to_file(data, outpath, mode=writemode)
 
 
 def recurse_subdirs(inpaths):
