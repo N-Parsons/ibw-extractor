@@ -25,8 +25,11 @@ VERSION = "0.1.2"
               help="Include column headers in csv/tsv output")
 @click.option('--recursive', is_flag=True,
               help="Recurse into sub-folders")
+@click.option('--minimise', is_flag=True,
+              help="Minimise JSON file size by removing structure")
 @click.version_option(version=VERSION)
-def main(infiles, outfile, outformat, outdir, clobber, headers, recursive):
+def main(infiles, outfile, outformat, outdir,
+         clobber, headers, recursive, minimise):
     if not infiles:
         click.secho("No input files specified. Aborting.", fg="red")
         sys.exit(1)
@@ -60,7 +63,8 @@ def main(infiles, outfile, outformat, outdir, clobber, headers, recursive):
             for infile in bar:
                 outpath = get_outpath(infile, outfile, outformat, outdir)
                 data = extractors.ibw2dict(infile)
-                util.save_to_file(data, outpath, mode=writemode)
+                util.save_to_file(data, outpath, mode=writemode,
+                                  csv_headers=headers, json_mini=minimise)
 
 
 def recurse_subdirs(inpaths):

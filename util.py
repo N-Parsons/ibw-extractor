@@ -8,7 +8,8 @@ from pprint import pformat
 import click
 
 
-def save_to_file(content, filepath, mode="x", headers=False):
+def save_to_file(content, filepath, mode="x",
+                 csv_headers=False, json_mini=False):
     """'Safe' interactive file saver - content should be a dict or string"""
     # Get the extension
     ext = os.path.splitext(filepath)[1]
@@ -17,31 +18,32 @@ def save_to_file(content, filepath, mode="x", headers=False):
     try:
         with open(filepath, mode) as outfile:
             if ext == ".json":
-                json.dump(content, outfile, indent=4, sort_keys=True)
+                ind = None if json_mini else 4
+                json.dump(content, outfile, indent=ind, sort_keys=True)
             elif ext in {".csv", ".tsv"}:
                 _delimiter = "," if ext == ".csv" else "\t"
                 csvwriter = csv.writer(outfile, delimiter=_delimiter,
                                        quotechar='"',
                                        quoting=csv.QUOTE_NONNUMERIC)
-                if headers:
-                    data = content["labels"] + content["data"]
-                else:
-                    data = content["data"]
-                for line in data:
+                if csv_headers:
+                    csvwriter.writerow(content["labels"])
+                for line in content["data"]:
                     csvwriter.writerow(line)
             else:
                 outfile.write(content)
     except FileExistsError:
         click.secho("\n{} already exists!".format(filepath), fg="yellow")
         if input("Do you want to overwrite it? (y/N): ").lower() == "y":
-            save_to_file(content, filepath, mode="w", headers=headers)
+            save_to_file(content, filepath, mode="w",
+                         csv_headers=csv_headers, json_mini=json_mini)
         else:
             resp = input("Rename or cancel? (r/C): ")
             if resp == "r":
                 new_filename = input("New filename ({}): ".format(ext))
                 directory = os.path.dirname(filepath)
                 new_filepath = os.path.join(directory, new_filename + ext)
-                save_to_file(content, new_filepath, mode="x", headers=headers)
+                save_to_file(content, new_filepath, mode="x",
+                             csv_headers=csv_headers, json_mini=json_mini)
             else:
                 click.secho("File not saved", fg="red")
 
