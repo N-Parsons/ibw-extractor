@@ -94,7 +94,7 @@ def get_outpath(infile, outfile, outformat, outdir):
     # Get the output directory
     if outdir:
         file_dir = os.path.join(_dirname, outdir)
-        os.mkdirs(file_dir, exist_ok=True)  # make dirs and subdirs (if needed)
+        os.makedirs(file_dir, exist_ok=True)  # make dirs in path if needed
     else:
         file_dir = _dirname
 
