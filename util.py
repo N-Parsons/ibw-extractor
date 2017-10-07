@@ -5,11 +5,12 @@ import csv
 
 from pprint import pformat
 
+import click
+
 
 def save_to_file(content, filepath, mode="x", headers=False):
     """'Safe' interactive file saver - content should be a dict or string"""
     # Get the extension
-    #filename = os.path.basename(filepath)
     ext = os.path.splitext(filepath)[1]
 
     # Write the contents of the file, or ask for alternative filename
@@ -31,7 +32,7 @@ def save_to_file(content, filepath, mode="x", headers=False):
             else:
                 outfile.write(content)
     except FileExistsError:
-        print("{} already exists!".format(filepath))
+        click.secho("\n{} already exists!".format(filepath), fg="yellow")
         if input("Do you want to overwrite it? (y/N): ").lower() == "y":
             save_to_file(content, filepath, mode="w", headers=headers)
         else:
@@ -42,7 +43,7 @@ def save_to_file(content, filepath, mode="x", headers=False):
                 new_filepath = os.path.join(directory, new_filename + ext)
                 save_to_file(content, new_filepath, mode="x", headers=headers)
             else:
-                print("File not saved")
+                click.secho("File not saved", fg="red")
 
 
 def process_notes(notes):
@@ -87,7 +88,10 @@ def from_repr(s):
 
 
 def pprint(data):
-    """Format things into lines to get nicer printing"""
+    """
+    Format things into lines to get nicer printing
+
+    Function is taken from https://github.com/wking/igor/test/test.py"""
     lines = pformat(data).splitlines()
     print('\n'.join([line.rstrip() for line in lines]))
 

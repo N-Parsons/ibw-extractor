@@ -7,6 +7,9 @@ import extractors
 import util
 
 
+VERSION = "0.1.2"
+
+
 class ArgumentError(Exception):
     pass
 
@@ -25,6 +28,7 @@ class ArgumentError(Exception):
               help="Include column headers in csv/tsv output")
 @click.option('--recursive', is_flag=True,
               help="Recurse into sub-folders")
+@click.version_option(version=VERSION)
 def main(infiles, outfile, outformat, outdir, clobber, headers, recursive):
     # Get/set writemode (x => create or ask, w => overwrite)
     writemode = "w" if clobber else "x"
@@ -45,13 +49,15 @@ def main(infiles, outfile, outformat, outdir, clobber, headers, recursive):
                             specified for multiple input files")
 
     # Iterate through input files and do action
-    for infile in infiles:
-        if outformat == "dump":
+    if outformat == "dump":
+        for infile in infiles:
             extractors.ibw2stdout(infile)  # prints to stdout
-        else:
-            outpath = get_outpath(infile, outfile, outformat, outdir)
-            data = extractors.ibw2dict(infile)
-            util.save_to_file(data, outpath, mode=writemode)
+    else:
+        with click.progressbar(infiles, width=0) as bar:
+            for infile in bar:
+                outpath = get_outpath(infile, outfile, outformat, outdir)
+                data = extractors.ibw2dict(infile)
+                util.save_to_file(data, outpath, mode=writemode)
 
 
 def recurse_subdirs(inpaths):
