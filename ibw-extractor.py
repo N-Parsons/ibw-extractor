@@ -35,7 +35,7 @@ def main(infiles, outfile, outformat, outdir, clobber, headers, recursive):
 
     # Get the full list of input files
     if recursive:
-        _infiles = list(filter(os.path.isfile, infiles))
+        _infiles = list(filter(is_ibw, infiles))
         inpaths = filter(os.path.isdir, infiles)
         infiles = _infiles + recurse_subdirs(inpaths)
     else:
@@ -61,7 +61,7 @@ def main(infiles, outfile, outformat, outdir, clobber, headers, recursive):
 
 
 def recurse_subdirs(inpaths):
-    """Recurse subdirectories and list return a list of ibw files"""
+    """Recurse subdirectories and return a list of ibw files"""
     # inpaths may just be one element, so it needs to be forced into a list
     files = [os.path.join(d, f) for inpath in list(inpaths)
              for (d, _, fs) in os.walk(inpath)
