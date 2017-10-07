@@ -1,4 +1,5 @@
 import os
+import sys
 import re
 
 import click
@@ -8,10 +9,6 @@ import util
 
 
 VERSION = "0.1.2"
-
-
-class ArgumentError(Exception):
-    pass
 
 
 @click.command()
@@ -30,6 +27,10 @@ class ArgumentError(Exception):
               help="Recurse into sub-folders")
 @click.version_option(version=VERSION)
 def main(infiles, outfile, outformat, outdir, clobber, headers, recursive):
+    if not infiles:
+        click.secho("No input files specified. Aborting.", fg="red")
+        sys.exit(1)
+
     # Get/set writemode (x => create or ask, w => overwrite)
     writemode = "w" if clobber else "x"
 
@@ -43,10 +44,12 @@ def main(infiles, outfile, outformat, outdir, clobber, headers, recursive):
 
     # Check for errors
     if len(infiles) is 0:
-        raise ArgumentError("No valid input files found")
+        click.secho("No .ibw files found", fg="red")
+        sys.exit(1)
     if len(infiles) > 1 and outfile:
-        raise ArgumentError("Output filename cannot be \
-                            specified for multiple input files")
+        click.secho("Output filename cannot be " +
+                    "specified for multiple input files", fg="red")
+        sys.exit(1)
 
     # Iterate through input files and do action
     if outformat == "dump":
@@ -95,7 +98,8 @@ def get_outpath(infile, outfile, outformat, outdir):
 
     # Check that the input is an ibw
     if in_ext != ".ibw":
-        raise ArgumentError("Input file does not have a .ibw extension")
+        click.secho("Input file does not have an .ibw extension", fg="red")
+        sys.exit(1)
 
     # Get the output directory
     if outdir:
@@ -109,18 +113,21 @@ def get_outpath(infile, outfile, outformat, outdir):
         try:
             impl_ext = re.search(r'\.[^.\/]*$', outfile).group(0)
             if outformat and impl_ext[1:] != outformat:
-                raise ArgumentError("Inconsistent formats in arguments")
+                click.secho("Inconsistent formats in arguments", fg="red")
+                sys.exit(1)
             else:
                 file_name = outfile
         except AttributeError:  # No match found - no implied extension
             if outformat:
                 file_name = outfile + "." + outformat
             else:
-                raise ArgumentError("Output format not specified or implied")
+                click.secho("Output format not specified or implied", fg="red")
+                sys.exit(1)
     elif outformat:
         file_name = filename + "." + outformat
     else:
-        raise ArgumentError("Output format not specified or implied")
+        click.secho("Output format not specified or implied", fg="red")
+        sys.exit(1)
 
     # Combine the components and return
     return os.path.join(file_dir, file_name)
