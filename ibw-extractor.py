@@ -46,7 +46,7 @@ def main(infiles, outfile, outformat, outdir,
         infiles = util.flatten(map(list_ibw, infiles))
 
     # Check for errors
-    if len(infiles) is 0:
+    if len(infiles) == 0:
         click.secho("No .ibw files found", fg="red")
         sys.exit(1)
     if len(infiles) > 1 and outfile:
